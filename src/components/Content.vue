@@ -5,27 +5,33 @@
       <Metric
         label="1 BIT  JPT"
         number="846.12"
-      />
+      >
+      </Metric>
       <Metric
         label="24 Hour Change"
         number="846.12"
-      />
+      >
+      </Metric>
       <Metric
         label="24 Hour High"
         number="846.12"
-      />
+      >
+      </Metric>
       <Metric
         label="24 Hour Low"
         number="846.12"
-      />
+      >
+      </Metric>
       <Metric
         label="24 Hour Volume"
         number="846.12"
-      />
+      >
+      </Metric>
       <Metric
         label="Market Cap"
         number="846.12"
-      />
+      >
+      </Metric>
     </div>
     <Chart />
   </div>

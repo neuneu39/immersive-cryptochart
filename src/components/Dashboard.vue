@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard">
     Dashboard
-    <Header />
-    <Content />
-    <Footer />
+    <Header></Header>
+    <Content></Content>
+    <Footer></Footer>
   </div>
 </template>
 
@@ -15,7 +15,9 @@ import Content from './Content';
 export default {
   name: 'Dashboard',
   components: {
-    Header, Footer, Content,
+    Header,
+    Footer,
+    Content,
   },
 };
 </script>
