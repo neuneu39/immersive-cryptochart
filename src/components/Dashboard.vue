@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+<<<<<<< HEAD
     Dashboard
     <div class="header">
       <h1>Cryptocurrency Dashboad</h1>
@@ -36,12 +37,26 @@
       </div>
     </div>
     <div class="footer">TECH PLAY ACADEMY</div>
+=======
+    <Header></Header>
+    <Content></Content>
+    <Footer></Footer>
+>>>>>>> upstream/checkpoint-1
   </div>
 </template>
 
 <script>
+import Header from './Header';
+import Content from './Content';
+import Footer from './Footer';
+
 export default {
   name: 'Dashboard',
+  components: {
+    Header,
+    Content,
+    Footer,
+  },
 };
 </script>
 
