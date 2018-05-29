@@ -31,14 +31,14 @@ export default {
     Metric,
     Chart,
   },
-  mounted: () => {
+  mounted() {
     fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
       .then((response) => {
-        response.json().then((json) => {
-          console.log(json);
-          debugger;
-          this.results = json;
-        });
+        response.json()
+          .then((json) => {
+            this.results = json[0]['24h_volume_jpy'];
+            debugger;
+          });
       });
   },
 };
