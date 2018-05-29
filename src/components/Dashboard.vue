@@ -1,47 +1,8 @@
 <template>
   <div class="dashboard">
-<<<<<<< HEAD
-    Dashboard
-    <div class="header">
-      <h1>Cryptocurrency Dashboad</h1>
-    </div>
-    <div class="content">
-      <div class="metric">
-        <div class="metric1">
-          <h2> 1 BIT  JPT</h2>
-          <h2> 846.119</h2>
-        </div>
-        <div class="metric2">
-          <h2> 24 Hour Change</h2>
-          <h2> -46.119</h2>
-        </div>
-        <div class="metric3">
-          <h2> 24 Hour Change</h2>
-          <h2> -46.119</h2>
-        </div>
-        <div class="metric4">
-          <h2> 24 Hour Change</h2>
-          <h2> -46.119</h2>
-        </div>
-        <div class="metric5">
-          <h2> 24 Hour Change</h2>
-          <h2> -46.119</h2>
-        </div>
-        <div class="metric6">
-          <h2> 24 Hour Change</h2>
-          <h2> -46.119</h2>
-        </div>
-      </div>
-      <div class="chart">
-        <h1>chart</h1>
-      </div>
-    </div>
-    <div class="footer">TECH PLAY ACADEMY</div>
-=======
     <Header></Header>
     <Content></Content>
     <Footer></Footer>
->>>>>>> upstream/checkpoint-1
   </div>
 </template>
 
