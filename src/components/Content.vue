@@ -37,7 +37,6 @@ export default {
         response.json()
           .then((json) => {
             this.results = json[0]['24h_volume_jpy'];
-            debugger;
           });
       });
   },
