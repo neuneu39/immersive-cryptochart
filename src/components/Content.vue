@@ -26,11 +26,15 @@ export default {
   },
   data() {
     return {
+      currency: {
+        crypto: 'BTC',
+        target: 'JPY',
+      },
       values: {},
     };
   },
   mounted() {
-    ApiService.getHistoricalData("BTC", "JPY").then(json => {
+    ApiService.getHistoricalData(this.currency.crypto, this.currency.target).then(json => {
       console.log('cryptocompare json = ', json);
     });
 
