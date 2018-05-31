@@ -16,6 +16,7 @@
 <script>
 import Metric from './Metric';
 import Chart from './Chart';
+import ApiService from '../api-service.js';
 
 export default {
   name: 'Content',
@@ -29,9 +30,9 @@ export default {
     };
   },
   mounted() {
-    fetch('https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=JPY&limit=1440')
-      .then(res => res.json())
-      .then(json => console.log('cryptocompare json = ', json));
+    ApiService.getHistoricalData("BTC", "JPY").then(json => {
+      console.log('cryptocompare json = ', json);
+    });
 
     fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
       .then(res => res.json())
