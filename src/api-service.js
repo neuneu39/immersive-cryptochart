@@ -12,7 +12,7 @@
  * }>}
  */
 function getHistoricalData(cryptocurrency, target) {
-  return fetch('https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=JPY&limit=1440')
+  return fetch(`https://min-api.cryptocompare.com/data/histominute?fsym=${cryptocurrency}&tsym=${target}&limit=1440`)
     .then(res => res.json())
     .then(json => {
       // return parsed data
