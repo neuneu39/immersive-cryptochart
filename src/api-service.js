@@ -2,6 +2,45 @@ import moment from 'moment-timezone';
 import numeral from 'numeral';
 
 /**
+ * マーケット情報の単位をアレする
+ *
+ * @param {number} value
+ * @returns {string}
+ */
+function convertMarketUnit(value) {
+  return numeral(value).format('0,0.00 a').toUpperCase();
+}
+
+// 2つのAPIのパラメータが異なるため、cryptocompare->coinmarketcapのために変換定義
+const TickerSymbolMap = {
+  BTC: 'bitcoin', // ここの種類を増やせば他の通貨も対応可能（当然両APIが対応している必要は有り）
+};
+
+/**
+ * マーケット情報を返す
+ *
+ * @param {string} cryptocurrency
+ * @param {string} target
+ * @returns {Promise<{volume: string, marketCap: string}>}
+ */
+function getMarketInformation(cryptocurrency, target) {
+  // 一応チェック
+  const ticker = TickerSymbolMap[cryptocurrency];
+  if (!ticker) {
+    return Promise.reject(`invalid cryptocurrency: ${cryptocurrency}`);
+  }
+  // you can change to axios.
+  const tlc = target.toLowerCase();
+  return fetch(`https://api.coinmarketcap.com/v1/ticker/${ticker}/?convert=${target}`)
+    .then(res => res.json())
+    // converter作ってもいい
+    .then(json => ({
+      volume: convertMarketUnit(json[0][`24h_volume_${tlc}`]),
+      marketCap: convertMarketUnit(json[0][`market_cap_${tlc}`]),
+    }));
+}
+
+/**
  * 金額単位をアレする
  *
  * @param {number} value
@@ -45,5 +84,6 @@ function getHistoricalData(cryptocurrency, target) {
 }
 
 export default {
+  getMarketInformation,
   getHistoricalData,
 };

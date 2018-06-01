@@ -41,18 +41,28 @@ export default {
     };
   },
   mounted() {
+    ApiService.getMarketInformation(this.currency.crypto, this.currency.target)
+      .then((json) => {
+        this.values.volume = json.volume;
+        this.values.marketCap = json.marketCap;
+      });
+
     ApiService.getHistoricalData(this.currency.crypto, this.currency.target)
       .then((json) => {
         this.values.latest = json.latest;
         this.values.change = json.change;
         this.values.high = json.high;
         this.values.low = json.low;
-        // TODO: closesはchartで使う
+        // TODO: ここのデータ整形は本当はここにあるべきではない、理由はわかるかな？
+        // this.values.closes = {
+        //   labels: json.closes.map(d => d.time),
+        //   datasets: [{
+        //     label: 'BTC',
+        //     backgroundColor: 'rgba(41, 164, 248, 0.5)',
+        //     data: json.closes.map(d => d.close),
+        //   }],
+        // };
       });
-
-    fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
-      .then(res => res.json())
-      .then(json => console.log('cointmarketcap json = ', json));
   },
 };
 </script>
