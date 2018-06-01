@@ -16,7 +16,8 @@ function convertPriceUnit(value) {
  *
  * @param {string} cryptocurrency
  * @param {string} target
- * @returns {Promise<{
+ * @returns
+ * {Promise<{
  *   latest: string,
  *   change: string,
  *   high: string,
@@ -27,7 +28,7 @@ function convertPriceUnit(value) {
 function getHistoricalData(cryptocurrency, target) {
   return fetch(`https://min-api.cryptocompare.com/data/histominute?fsym=${cryptocurrency}&tsym=${target}&limit=1440`)
     .then(res => res.json())
-    .then(json => {
+    .then((json) => {
       const latest = json.Data[json.Data.length - 1].close;
       const change = convertPriceUnit(latest - json.Data[0].close);
       return {

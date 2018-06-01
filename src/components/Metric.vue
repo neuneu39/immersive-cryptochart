@@ -1,12 +1,14 @@
 <template>
   <div class="metric-container">
-    Metric
+    <div class="metric-label">{{label}}</div>
+    <div class="metric-value">{{value}}</div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Metric',
+  props: ['label', 'value']
 };
 </script>
 

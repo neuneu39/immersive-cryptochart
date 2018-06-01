@@ -2,12 +2,12 @@
   <div class="content-container">
     <p>[BTC] (JPY)</p>
     <div class="metrics-container">
-      <Metric></Metric>
-      <Metric></Metric>
-      <Metric></Metric>
-      <Metric></Metric>
-      <Metric></Metric>
-      <Metric></Metric>
+      <Metric v-bind:label="`1 ${currency.crypto} <> ${currency.target}`" v-bind:value="values.latest"></Metric>
+      <Metric label="24 Hour Change" v-bind:value="values.change"></Metric>
+      <Metric label="24 Hour High" v-bind:value="values.high"></Metric>
+      <Metric label="24 Hour Low" v-bind:value="values.low"></Metric>
+      <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
+      <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
     <Chart></Chart>
   </div>
@@ -30,13 +30,25 @@ export default {
         crypto: 'BTC',
         target: 'JPY',
       },
-      values: {},
+      values: {
+        latest: '0',
+        change: '0',
+        high: '0',
+        low: '0',
+        volume: '0',
+        marketCap: '0'
+      },
     };
   },
   mounted() {
-    ApiService.getHistoricalData(this.currency.crypto, this.currency.target).then(json => {
-      console.log('cryptocompare json = ', json);
-    });
+    ApiService.getHistoricalData(this.currency.crypto, this.currency.target)
+      .then((json) => {
+        this.values.latest = json.latest;
+        this.values.change = json.change;
+        this.values.high = json.high;
+        this.values.low = json.low;
+        // TODO: closesはchartで使う
+      });
 
     fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
       .then(res => res.json())
