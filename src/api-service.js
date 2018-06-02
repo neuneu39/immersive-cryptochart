@@ -1,16 +1,5 @@
-import moment from 'moment-timezone';
-import numeral from 'numeral';
-
-/**
- * 金額単位をアレする
- *
- * @param {number} value
- * @returns {string}
- */
-function convertPriceUnit(value) {
-  return numeral(value).format('0,0.00');
-}
-
+import numeral from "numeral";
+import moment from "moment-timezone";
 /**
  * 24時間の履歴データを返す
  *
@@ -28,19 +17,24 @@ function convertPriceUnit(value) {
 function getHistoricalData(cryptocurrency, target) {
   return fetch(`https://min-api.cryptocompare.com/data/histominute?fsym=${cryptocurrency}&tsym=${target}&limit=1440`)
     .then(res => res.json())
-    .then((json) => {
-      const latest = json.Data[json.Data.length - 1].close;
-      const change = convertPriceUnit(latest - json.Data[0].close);
+    .then(json => {
+      let close_first = json.Data[0].close;
+      let close_end = json.Data[json.Data.length-1].close;
+      let high = Math.max.apply(null, json.Data.map( value => value.high ));
+      let low = Math.min.apply(null, json.Data.map( value => value.low ))
+      let time = moment.unix(json.Data[0].time, "Asia/Tokyo").format("YYYY-MM-DD HH:mm:ssZ");
+      let close = json.Data.map( value => {
+        value.close;
+        value.time;
+      });
+      // return parsed data
       return {
-        latest: convertPriceUnit(latest),
-        change,
-        high: convertPriceUnit(Math.max.apply(null, json.Data.map(item => item.high))),
-        low: convertPriceUnit(Math.min.apply(null, json.Data.map(item => item.low))),
-        closes: json.Data.map(item => ({
-          close: item.close,
-          time: moment(item.time * 1000).tz('Asia/Tokyo').format('YYYY-MM-DD hh:mm'), // you can change timezone.
-        })),
-      };
+        latest: close_end,
+        change: close_end - close_first,
+        high: numeral(high).format('0,0.00'),
+        low: low, 
+        closes: close,
+      }
     });
 }
 
