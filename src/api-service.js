@@ -8,7 +8,7 @@ import numeral from 'numeral';
  * @returns {string}
  */
 function convertPriceUnit(value) {
-  return numeral(value).format('0,0.00 a');
+  return numeral(value).format('0,0.00 a').toUpperCase();
 }
 
 /**
