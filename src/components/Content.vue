@@ -50,6 +50,12 @@ export default {
         // TODO: closesはchartで使う
       });
 
+    ApiService.getMarketAndVolumeData(this.currency.crypto, this.currency.target)
+      .then((json) => {
+        this.values.volume = json.volume;
+        this.values.marketCap = json.marketCap;
+      });
+
     fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
       .then(res => res.json())
       .then(json => console.log('cointmarketcap json = ', json));

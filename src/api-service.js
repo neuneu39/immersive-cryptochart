@@ -44,6 +44,35 @@ function getHistoricalData(cryptocurrency, target) {
     });
 }
 
+function convertBIT(letter) {
+  if(letter == 'BTC') return 'bitcoin';
+}
+
+/**
+ * return 24 hour volume and market cap 
+ *
+ * @param {string} 24hVolume
+ * @param {string} marketCap
+ * @returns
+ * {Promise<{
+ *   24hvolume: string,
+ *   marketCap: string,
+  * }>}
+ */
+  function getMarketAndVolumeData(cryptoFrom, cryptoTo) {
+    cryptoFrom = convertBIT(cryptoFrom);
+    return fetch(`https://api.coinmarketcap.com/v1/ticker/${cryptoFrom}/?convert=${cryptoTo}`)
+      .then(res => res.json())
+      .then((json) => {
+        console.log(json);
+        return {
+          volume: json[0]['24h_volume_jpy'],
+          marketCap: json[0].market_cap_jpy,
+        }
+      })
+  }
+
 export default {
   getHistoricalData,
+  getMarketAndVolumeData,
 };
