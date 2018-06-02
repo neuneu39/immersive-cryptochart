@@ -10,7 +10,7 @@
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
     <Chart
-      v-bind:chartData="this.testData"
+      v-bind:chartData="this.values.closes"
       v-bind:options="{responsive: false, maintainAspectRatio: false}"
       v-bind:width="1200"
       v-bind:height="400"
@@ -44,7 +44,6 @@ export default {
         volume: '0',
         marketCap: '0'
       },
-      testData: {}
     };
   },
   mounted() {
@@ -64,30 +63,18 @@ export default {
         this.values.high = json.high;
         this.values.low = json.low;
         // TODO: ここのデータ整形は本当はここにあるべきではない、理由はわかるかな？
-        // this.values.closes = {
-        //   labels: json.closes.map(d => d.time),
-        //   datasets: [{
-        //     label: 'BTC',
-        //     backgroundColor: 'rgba(41, 164, 248, 0.5)',
-        //     data: json.closes.map(d => d.close),
-        //   }],
-        // };
+        this.values.closes = {
+          labels: json.closes.map(d => d.time),
+          datasets: [{
+            label: 'BTC',
+            backgroundColor: 'rgba(41, 164, 248, 0.5)',
+            data: json.closes.map(d => d.close),
+          }],
+        };
       })
       .catch(err => {
         this.errMessage = 'get historical data fail';
       });
-
-    const data = new Array(50).fill(0).map(() => Math.floor(Math.random() * 10));
-    this.testData = {
-      labels: data.map((_, idx) => `idx ${idx}`),
-      datasets: [
-        {
-          label: 'Data One',
-          backgroundColor: 'rgba(255, 150, 255, 0.5)',
-          data: data,
-        }
-      ]
-    };
   },
 };
 </script>
