@@ -9,7 +9,7 @@
       <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
-    <Chart></Chart>
+    <Chart v-bind:chartData="currentData" v-bind:chartOptions="options"></Chart>
   </div>
 </template>
 
@@ -36,10 +36,14 @@ export default {
         high: '0',
         low: '0',
         volume: '0',
-        marketCap: '0'
+        marketCap: '0',
+        closes: '0'
       },
-    };
-  },
+      currentData: {},
+      options:  {responsive: true, maintainAspectRatio: false},
+      }
+    },
+
   mounted() {
     ApiService.getMarketInformation(this.currency.crypto, this.currency.target)
       .then((json) => {
@@ -55,14 +59,30 @@ export default {
         this.values.low = json.low;
         // TODO: ここのデータ整形は本当はここにあるべきではない、理由はわかるかな？
         // this.values.closes = {
-        //   labels: json.closes.map(d => d.time),
-        //   datasets: [{
-        //     label: 'BTC',
-        //     backgroundColor: 'rgba(41, 164, 248, 0.5)',
-        //     data: json.closes.map(d => d.close),
-        //   }],
+        //   // labels: json.closes.map(d => d.time),
+        //   // datasets: [{
+        //   //   label: 'BTC',
+        //   //   backgroundColor: 'rgba(41, 164, 248, 0.5)',
+        //   //   data: json.closes.map(d => d.close),
+        //   // }],
         // };
+        this.currentData = {
+          labels: json.closes.map(d => d.time),//this.values.closes,//.map(d => d.time),//['January', 'February', 'March', 'June'],
+          datasets: [
+            {
+              labels: 'BTC',
+              backgroundColor: 'rgba(41, 164, 248, 0.5)',
+              data: json.closes.map(d => d.close),//this.values.closes.time,//.map(d => d.close)//[40, 20, 10, 49]
+            }
+          ]
+        };
+      //  this.values.closes = json.closes;
+       // console.log(this.values.closes.map(d => d.close));
+      })
+      .catch(err => {
+        this.errMessage ='get historical data fail';
       });
+      
   },
 };
 </script>
