@@ -8,7 +8,7 @@ import numeral from 'numeral';
  * @returns {string}
  */
 function convertPriceUnit(value) {
-  return numeral(value).format('0,0.00');
+  return numeral(value).format('0,0.00 a');
 }
 
 /**
@@ -67,8 +67,8 @@ const convertBIT = {
       .then((json) => {
         console.log(json);
         return {
-          volume: json[0]['24h_volume_jpy'],
-          marketCap: json[0]['market_cap_jpy'],
+          volume: convertPriceUnit(json[0]['24h_volume_jpy']),
+          marketCap: convertPriceUnit(json[0]['market_cap_jpy']),
         }
       })
   }
