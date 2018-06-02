@@ -14,6 +14,7 @@ import moment from "moment-timezone";
  *   closes: Array.<{close: number, time: string}>
  * }>}
  */
+
 function getHistoricalData(cryptocurrency, target) {
   return fetch(`https://min-api.cryptocompare.com/data/histominute?fsym=${cryptocurrency}&tsym=${target}&limit=1440`)
     .then(res => res.json())
@@ -22,11 +23,10 @@ function getHistoricalData(cryptocurrency, target) {
       let close_end = json.Data[json.Data.length-1].close;
       let high = Math.max.apply(null, json.Data.map( value => value.high ));
       let low = Math.min.apply(null, json.Data.map( value => value.low ))
-      let time = moment.unix(json.Data[0].time, "Asia/Tokyo").format("YYYY-MM-DD HH:mm:ssZ");
-      let close = json.Data.map( value => {
-        value.close;
-        value.time;
-      });
+      let close = json.Data.map( value => ({
+        close: value.close,
+        time: moment.unix(value.time, "Asia/Tokyo").format("YYYY-MM-DD HH:mm:ssZ")
+      }));
       // return parsed data
       return {
         latest: close_end,

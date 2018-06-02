@@ -48,6 +48,7 @@ export default {
         this.values.high = json.high;
         this.values.low = json.low;
         // TODO: closesはchartで使う
+        console.log(json);
       });
 
     fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
