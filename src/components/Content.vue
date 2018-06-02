@@ -56,9 +56,6 @@ export default {
         this.values.marketCap = json.marketCap;
       });
 
-    fetch('https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=JPY')
-      .then(res => res.json())
-      .then(json => console.log('cointmarketcap json = ', json));
   },
 };
 </script>
