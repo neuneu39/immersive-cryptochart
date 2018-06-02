@@ -2,11 +2,11 @@
 
 ## テックメンターが下記の項目を実装します：
 
-* [ ] [Review] Solution code for coinmarketcap.com API call, formatting of data, and rendering of _24 Hour Volume_ and _Market Cap_ Metric components.
-* [ ] [Live Code] Implement test cases for the ApiService's getMarketInformation function
-* [ ] [Live Code] Set up the vue-chartjs components
-  * [ ] Set up reactive chartjs component
-  * [ ] Pass in some test dummy data to render a chart
+* [x] [Review] Solution code for coinmarketcap.com API call, formatting of data, and rendering of _24 Hour Volume_ and _Market Cap_ Metric components.
+* [x] [Live Code] Implement test cases for the ApiService's getMarketInformation function
+* [x] [Live Code] Set up the vue-chartjs components
+  * [x] Set up reactive chartjs component
+  * [x] Pass in some test dummy data to render a chart
 
 ## 下記の項目を実装してみよう：
 

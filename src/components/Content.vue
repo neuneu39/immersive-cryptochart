@@ -9,7 +9,12 @@
       <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
-    <Chart></Chart>
+    <Chart
+      v-bind:chartData="this.testData"
+      v-bind:options="{responsive: false, maintainAspectRatio: false}"
+      v-bind:width="1200"
+      v-bind:height="400"
+    ></Chart>
   </div>
 </template>
 
@@ -26,6 +31,7 @@ export default {
   },
   data() {
     return {
+      errMessage: '',
       currency: {
         crypto: 'BTC',
         target: 'JPY',
@@ -38,6 +44,7 @@ export default {
         volume: '0',
         marketCap: '0'
       },
+      testData: {}
     };
   },
   mounted() {
@@ -45,7 +52,10 @@ export default {
       .then((json) => {
         this.values.volume = json.volume;
         this.values.marketCap = json.marketCap;
-      });
+      })
+      .catch(err => {
+        this.errMessage = 'get market information fail';
+      })
 
     ApiService.getHistoricalData(this.currency.crypto, this.currency.target)
       .then((json) => {
@@ -62,7 +72,22 @@ export default {
         //     data: json.closes.map(d => d.close),
         //   }],
         // };
+      })
+      .catch(err => {
+        this.errMessage = 'get historical data fail';
       });
+
+    const data = new Array(50).fill(0).map(() => Math.floor(Math.random() * 10));
+    this.testData = {
+      labels: data.map((_, idx) => `idx ${idx}`),
+      datasets: [
+        {
+          label: 'Data One',
+          backgroundColor: 'rgba(255, 150, 255, 0.5)',
+          data: data,
+        }
+      ]
+    };
   },
 };
 </script>
