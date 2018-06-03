@@ -37,9 +37,11 @@ export default {
         low: '0',
         volume: '0',
         marketCap: '0',
-        closes: '0'
       },
-      currentData: {},
+      currentData: {
+        labels: [],
+        data: [],
+      },
       options:  {responsive: true, maintainAspectRatio: false},
       }
     },
@@ -49,6 +51,7 @@ export default {
       .then((json) => {
         this.values.volume = json.volume;
         this.values.marketCap = json.marketCap;
+        console.log("marketinformation");
       });
 
     ApiService.getHistoricalData(this.currency.crypto, this.currency.target)
@@ -67,22 +70,19 @@ export default {
         //   // }],
         // };
         this.currentData = {
-          labels: json.closes.map(d => d.time),//this.values.closes,//.map(d => d.time),//['January', 'February', 'March', 'June'],
+            labels: json.closes.map(d => d.time),
           datasets: [
             {
               labels: 'BTC',
               backgroundColor: 'rgba(41, 164, 248, 0.5)',
-              data: json.closes.map(d => d.close),//this.values.closes.time,//.map(d => d.close)//[40, 20, 10, 49]
+              data: json.closes.map(d => d.close),
             }
-          ]
-        };
-      //  this.values.closes = json.closes;
-       // console.log(this.values.closes.map(d => d.close));
+          ],
+        };  
       })
       .catch(err => {
         this.errMessage ='get historical data fail';
-      });
-      
+      });      
   },
 };
 </script>
