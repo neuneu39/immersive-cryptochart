@@ -1,19 +1,7 @@
 <template>
   <div class="content-container">
-    <p>[BTC] (JPY)</p>
+    <p>[BTC][EHT] (JPY)</p>
     <div class="buttons-container">
-      <button
-        class="BTC-JPY"
-        v-on:click="changeCrypto('BTC')"
-      >
-        BIT
-      </button>
-      <button
-        class="ETH-JPY"
-        v-on:click="changeCrypto('ETH')"
-      >
-        ETH
-      </button>
       <button
         class="aminute"
         v-on:click="changeRange('minute')"
@@ -28,7 +16,7 @@
       </button>
     </div>
     <div class="metrics-container">
-      <Metric v-bind:label="`1 ${currency.crypto} <> ${currency.target}`" v-bind:value="values.latest"></Metric>
+      <Metric v-bind:label="`1 ${currency.crypto[0]} <> ${currency.target}`" v-bind:value="values.latest"></Metric>
       <Metric label="24 Hour Change" v-bind:value="values.change"></Metric>
       <Metric label="24 Hour High" v-bind:value="values.high"></Metric>
       <Metric label="24 Hour Low" v-bind:value="values.low"></Metric>
@@ -48,7 +36,6 @@
 import Metric from './Metric';
 import Chart from './Chart';
 import ApiService from '../api-service.js';
-import Switch from './Switch';
 
 export default {
   name: 'Content',
@@ -61,7 +48,7 @@ export default {
       errMessage: '',
       currency: {
         //crypto: ['BTC', 'ETH'],
-        crypto: 'BTC',
+        crypto: ['BTC','ETH'],
         target: 'JPY',
         range: ['hour'],
       },
@@ -71,7 +58,8 @@ export default {
         high: '0',
         low: '0',
         volume: '0',
-        marketCap: '0'
+        marketCap: '0',
+        closes: [],
       },
     };
   },
@@ -80,19 +68,10 @@ export default {
       const newCrypto = this.currency.range.slice(0);
       newCrypto[0] = timeRange;
       this.currency.range = newCrypto;
-      // this.currency.range = crypto;
-      console.log(this.currency.range);
       this.fillData();
-    },
-    changeCrypto: function(crypto) {
-      this.currency.crypto = crypto;
-      this.fillData();
-    },
-    activeButton: function() {
-
     },
     fillData: function() {
-      ApiService.getMarketInformation(this.currency.crypto, this.currency.target)
+      ApiService.getMarketInformation(this.currency.crypto[0], this.currency.target)
         .then((json) => {
           this.values.volume = json.volume;
           this.values.marketCap = json.marketCap;
@@ -101,7 +80,7 @@ export default {
           this.errMessage = 'get market information fail';
         })
 
-      ApiService.getHistoricalData(this.currency.crypto, this.currency.target, this.currency.range)
+      ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
         .then((json) => {
           this.values.latest = json.latest;
           this.values.change = json.change;
@@ -111,15 +90,31 @@ export default {
           this.values.closes = {
             labels: json.closes.map(d => d.time),
             datasets: [{
-              label: this.currency.crypto,
+              label: this.currency.crypto[0],
               backgroundColor: 'rgba(41, 164, 248, 0.5)',
               data: json.closes.map(d => d.close),
+            },
+            {// 2ライングラフ表示テスト用
+              label: this.currency.crypto[1],
+              backgroundColor: 'rgba(80, 80, 248, 0.5)',
+              data: json.closes.map(d => d.close * Math.random()),
             }],
           };
         })
         .catch(err => {
           this.errMessage = 'get historical data fail';
-        });
+        })
+      // ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
+      // .then((json) => {
+      //   this.values.closes.datasets[1] = {
+      //     label: this.currency.crypto[1],
+      //     backgroundColor: 'rgba(80, 164, 248, 0.5)',
+      //     data: json.closes.map(d => d.close),
+      //   };
+      // })
+      // .catch(err => {
+      //   this.errMessage = 'get historical data fail';
+      // })
     },
   },
   mounted() {
@@ -142,12 +137,6 @@ export default {
   font-size: 1em;
   cursor: pointer;
   transition: background-color .2s ease;
-}
-  button.BTC-JPY {
-  background-color: rgb(70, 236, 80);
-}
-button.ETH-JPY {
-  background-color: rgb(70, 236, 56);
 }
 button.aminute {
   background-color: rgb(77, 200, 56);
