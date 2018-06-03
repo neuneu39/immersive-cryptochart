@@ -9,7 +9,12 @@
       <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
-    <Chart v-bind:chartData="values.closes" v-bind:chartOptions="options"></Chart>
+    <Chart 
+      v-bind:chartData="values.closes" 
+      v-bind:chartOptions="options"
+      v-bind:width="1200"
+      v-bind:height="400"
+      ></Chart>
   </div>
 </template>
 
