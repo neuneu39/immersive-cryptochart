@@ -9,7 +9,7 @@
       <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
-    <Chart v-bind:chartData="currentData" v-bind:chartOptions="options"></Chart>
+    <Chart v-bind:chartData="values.closes" v-bind:chartOptions="options"></Chart>
   </div>
 </template>
 
@@ -37,10 +37,7 @@ export default {
         low: '0',
         volume: '0',
         marketCap: '0',
-      },
-      currentData: {
-        labels: [],
-        data: [],
+        closes: {},
       },
       options:  {responsive: true, maintainAspectRatio: false},
       }
@@ -51,7 +48,6 @@ export default {
       .then((json) => {
         this.values.volume = json.volume;
         this.values.marketCap = json.marketCap;
-        console.log("marketinformation");
       });
 
     ApiService.getHistoricalData(this.currency.crypto, this.currency.target)
@@ -69,8 +65,8 @@ export default {
         //   //   data: json.closes.map(d => d.close),
         //   // }],
         // };
-        this.currentData = {
-            labels: json.closes.map(d => d.time),
+        this.values.closes = {
+          labels: json.closes.map(d => d.time),
           datasets: [
             {
               labels: 'BTC',
