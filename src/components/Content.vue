@@ -23,12 +23,14 @@
       <Metric label="24 Hour Volume" v-bind:value="values.volume"></Metric>
       <Metric label="24 Market Cap" v-bind:value="values.marketCap"></Metric>
     </div>
+    <div v-if="this.viewFlag">
     <Chart
       v-bind:chartData="this.values.closes"
       v-bind:options="{responsive: false, maintainAspectRatio: false}"
       v-bind:width="1200"
       v-bind:height="400"
     ></Chart>
+    </div>
   </div>
 </template>
 
@@ -36,6 +38,7 @@
 import Metric from './Metric';
 import Chart from './Chart';
 import ApiService from '../api-service.js';
+
 
 export default {
   name: 'Content',
@@ -47,7 +50,6 @@ export default {
     return {
       errMessage: '',
       currency: {
-        //crypto: ['BTC', 'ETH'],
         crypto: ['BTC','ETH'],
         target: 'JPY',
         range: ['hour'],
@@ -61,6 +63,7 @@ export default {
         marketCap: '0',
         closes: [],
       },
+      viewFlag: false,
     };
   },
   methods: {
@@ -80,7 +83,7 @@ export default {
           this.errMessage = 'get market information fail';
         })
 
-      ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
+      ApiService.getHistoricalData(this.currency.crypto[0], this.currency.target, this.currency.range)
         .then((json) => {
           this.values.latest = json.latest;
           this.values.change = json.change;
@@ -93,28 +96,31 @@ export default {
               label: this.currency.crypto[0],
               backgroundColor: 'rgba(41, 164, 248, 0.5)',
               data: json.closes.map(d => d.close),
-            },
-            {// 2ライングラフ表示テスト用
-              label: this.currency.crypto[1],
-              backgroundColor: 'rgba(80, 80, 248, 0.5)',
-              data: json.closes.map(d => d.close * Math.random()),
+            // },
+            // {// 2ライングラフ表示テスト用
+            //   label: this.currency.crypto[1],
+            //   backgroundColor: 'rgba(80, 80, 248, 0.5)',
+            //   data: json.closes.map(d => d.close * Math.random()),
             }],
           };
+          this.viewFlag = false;
         })
         .catch(err => {
           this.errMessage = 'get historical data fail';
         })
-      // ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
-      // .then((json) => {
-      //   this.values.closes.datasets[1] = {
-      //     label: this.currency.crypto[1],
-      //     backgroundColor: 'rgba(80, 164, 248, 0.5)',
-      //     data: json.closes.map(d => d.close),
-      //   };
-      // })
-      // .catch(err => {
-      //   this.errMessage = 'get historical data fail';
-      // })
+      ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
+      .then((json) => {
+        this.values.closes.datasets[1] = {
+          label: this.currency.crypto[1],
+          backgroundColor: 'rgba(80, 164, 248, 0.5)',
+          data: json.closes.map(d => d.close),
+        };
+        this.viewFlag = true;
+        console.log("data" , this.values.closes.datasets.length);
+      })
+      .catch(err => {
+        this.errMessage = 'get historical data fail';
+      })
     },
   },
   mounted() {
