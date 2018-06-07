@@ -74,55 +74,37 @@ export default {
       this.fillData();
     },
     fillData: function() {
-      ApiService.getMarketInformation(this.currency.crypto[0], this.currency.target)
-        .then((json) => {
-          this.values.volume = json.volume;
-          this.values.marketCap = json.marketCap;
-        })
-        .catch(err => {
-          this.errMessage = 'get market information fail';
-        })
-
-      ApiService.getHistoricalData(this.currency.crypto[0], this.currency.target, this.currency.range)
-        .then((json) => {
-          this.values.latest = json.latest;
-          this.values.change = json.change;
-          this.values.high = json.high;
-          this.values.low = json.low;
-          // TODO: ここのデータ整形は本当はここにあるべきではない、理由はわかるかな？
+      this.viewFlag = false;
+      Promise.all([
+        ApiService.getMarketInformation(this.currency.crypto[0], this.currency.target),
+        ApiService.getHistoricalData(this.currency.crypto[0], this.currency.target, this.currency.range),
+        ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
+      ]).then((json) => {
+          this.values.volume = json[0].volume;
+          this.values.marketCap = json[0].marketCap;    
+          this.values.latest = json[1].latest;
+          this.values.change = json[1].change;
+          this.values.high = json[1].high;
+          this.values.low = json[1].low;   
+          
           this.values.closes = {
-            labels: json.closes.map(d => d.time),
+            labels: json[1].closes.map(d => d.time),
             datasets: [{
               label: this.currency.crypto[0],
               backgroundColor: 'rgba(41, 164, 248, 0.5)',
-              data: json.closes.map(d => d.close),
-            // },
-            // {// 2ライングラフ表示テスト用
-            //   label: this.currency.crypto[1],
-            //   backgroundColor: 'rgba(80, 80, 248, 0.5)',
-            //   data: json.closes.map(d => d.close * Math.random()),
+              data: json[1].closes.map(d => d.close),
+            },
+            {
+              label: this.currency.crypto[1],
+              backgroundColor: 'rgba(80, 30, 248, 0.5)',
+              data: json[2].closes.map(d => d.close),
             }],
           };
-          this.viewFlag = false;
-        })
-        .catch(err => {
-          this.errMessage = 'get historical data fail';
-        })
-      ApiService.getHistoricalData(this.currency.crypto[1], this.currency.target, this.currency.range)
-      .then((json) => {
-        this.values.closes.datasets[1] = {
-          label: this.currency.crypto[1],
-          backgroundColor: 'rgba(80, 164, 248, 0.5)',
-          data: json.closes.map(d => d.close),
-        };
-        this.viewFlag = true;
-        console.log("data" , this.values.closes.datasets.length);
-      })
-      .catch(err => {
-        this.errMessage = 'get historical data fail';
-      })
+          this.viewFlag = true;
+      });
     },
   },
+
   mounted() {
     this.fillData();
   },
